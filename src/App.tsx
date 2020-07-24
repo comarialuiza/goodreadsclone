@@ -1,25 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
 
-function App() {
+// import { Container } from './styles';
+import api from './services/api';
+import GlobalStyle from './styles/global';
+import Routes from './routes';
+
+const App: React.FC = () => {
+  async function handleGetData () {
+    try {
+      const res = await api.get('myBooks?uid=75098237');
+      console.log(res.data);
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    handleGetData();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Routes />
+      <GlobalStyle />
+    </>
   );
 }
 
