@@ -1,26 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import api from './../../services/api';
 
-// import { Container } from './styles';
+import { Container, Book } from './styles';
 
-interface Books {
+interface BookInfo {
     id: string;
     title: string;
     description: string;
     image_url: string;
 }
+interface Books {
+    book: BookInfo;
+    read_count: string;
+}
 
 const BooksOverview: React.FC = () => {
     const [ loading, setLoading ] = useState(false);
+    const [ error, setError ] = useState('');
     const [ books, setBooks ] = useState<Books[]>([]);
 
     async function handleGetData () {
         setLoading(true);
         try {
-            const res = await api.get('myBooks?uid=75098237');
-            const books = res.data.books;
-            setBooks(books);
-            console.log(res.data.books);
+            const id = localStorage.getItem('@goodreadsID'); 
+
+            if(id) {
+                console.log('Id exists', id);
+                const res = await api.get(`myBooks?uid=${id}`);
+                const books = res.data.books;
+            
+                setBooks(books);
+                console.log(books);
+
+                console.log('Everything ', res.data);
+            } else {
+                setError('There is no user with this id! Please try again!');
+                console.log('Id does not exist', id);
+            }
         } catch(err) {
             console.log(err);
         }
@@ -31,18 +47,23 @@ const BooksOverview: React.FC = () => {
         handleGetData();
     }, []);
     return (
-        <>
+        <Container>
             { loading && <p>Loading...</p> }
+            { error && <p>{ error }</p>}
             <ul>
                 { books && books.map(book => (
-                    <div key={ book.id } >
-                        <h2>{ book.title }</h2>
-                        <p>{ book.description }</p>
-                        <img src={ book.image_url } alt={ book.title } />
-                    </div>
+                    <Book key={ book.book.id } >
+                        <div className="visual">
+                            <img src={ book.book.image_url } alt={ book.book.title } />
+                        </div>
+                        <div className="content">
+                            <h2>{ book.book.title }</h2>
+                            <p>{ book.book.description }</p>
+                        </div>
+                    </Book>
                 )) }
             </ul>
-        </>
+        </Container>
     );
 }
 

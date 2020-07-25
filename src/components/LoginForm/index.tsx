@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import { Container, Form, Input } from './styles';
+import { Container, Form, Input, Button } from './styles';
 
 const LoginForm: React.FC = () => {
     const [ id, setId ] = useState('');
 
-    const handleLogin = () => {
+    const history = useHistory();
 
+    const handleLogin = () => {
+        localStorage.setItem('@goodreadsID', id);
+
+        history.push('/');
     }
 
     return (
@@ -20,7 +25,7 @@ const LoginForm: React.FC = () => {
                     onChange={ e => setId(e.target.value) }
                 />
                 
-
+                <Button type="submit">Access</Button>
             </Form>
         </Container>
     );

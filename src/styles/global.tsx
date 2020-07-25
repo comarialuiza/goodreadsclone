@@ -24,7 +24,11 @@ const GlobalStyles = createGlobalStyle`
     }
 
     body {
-        font: 14px #333 'Catamaran', sans-serif;
+        font: 14px 'Catamaran', sans-serif;
+    }
+
+    ul {
+        list-style: none;
     }
 `;
 
